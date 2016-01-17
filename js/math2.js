@@ -183,26 +183,35 @@
   };
 
   handleFractions = function(tokens) {
-    var denom, foundFraction, frac, i, it, k, len, len1, len2, m, n, newTokens, nom, ref, ref1, ref2;
+    var denom, foundFraction, frac, i, it, k, len, len1, m, n, newTokens, nom, ref, ref1, ref2;
     while (true) {
       foundFraction = false;
       console.log(tokens);
       newTokens = [];
       i = 0;
-      ref = [1, tokens.length - 2];
-      for (k = 0, len = ref.length; k < len; k++) {
-        i = ref[k];
-        if (tokens[i] === "/") {
+      console.log((function() {
+        var k, len, ref, results;
+        ref = [1, tokens.length - 2];
+        results = [];
+        for (k = 0, len = ref.length; k < len; k++) {
+          i = ref[k];
+          results.push(i);
+        }
+        return results;
+      })());
+      for (i = k = 1, ref = tokens.length - 2; 1 <= ref ? k <= ref : k >= ref; i = 1 <= ref ? ++k : --k) {
+        console.log("tokens[i] ==? ", tokens[i]);
+        if (/\//g.test(tokens[i])) {
           foundFraction = true;
           break;
         }
       }
       if (!foundFraction) {
+        console.log("no / found");
         return tokens;
       }
-      console.log("i", i);
       ref1 = tokens.slice(0, i - 1);
-      for (m = 0, len1 = ref1.length; m < len1; m++) {
+      for (m = 0, len = ref1.length; m < len; m++) {
         it = ref1[m];
         newTokens.push(it);
       }
@@ -213,7 +222,7 @@
       i = i + 2;
       if (i < tokens.length) {
         ref2 = tokens.slice(i);
-        for (n = 0, len2 = ref2.length; n < len2; n++) {
+        for (n = 0, len1 = ref2.length; n < len1; n++) {
           it = ref2[n];
           newTokens.push(it);
         }
@@ -235,6 +244,8 @@
     str = str.replace(/sin/g, "\\sin ");
     str = str.replace(/sq/g, "\\sqrt ");
     str = str.replace(/\\i/g, "\\int ");
+    str = str.replace(/ln/g, "\\ln ");
+    str = str.replace(/log/g, "\\log ");
     tokens = tokenize(str);
     tokens = proccess(tokens);
     exp = new Block(tokens);

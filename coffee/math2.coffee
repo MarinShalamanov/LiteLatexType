@@ -110,15 +110,20 @@ handleFractions = (tokens) ->
 		newTokens = []
 		
 		i = 0;
-		for i in [1, tokens.length-2]  # excluded the corner cases
-			if tokens[i] == "/"
+		console.log(i for i in [1, tokens.length-2])
+		
+		for i in [1 .. tokens.length-2]  # excluded the corner cases
+			console.log("tokens[i] ==? ", tokens[i])
+			
+			if (/\//g).test(tokens[i])	
 				foundFraction = true
 				break;
 		
 		if !foundFraction 
+			console.log("no / found")
 			return tokens
 		
-		console.log("i", i)
+		
 		
 		newTokens.push(it) for it in tokens.slice(0, i-1)
 		
@@ -140,6 +145,7 @@ handleFractions = (tokens) ->
 		
 proccess = (tokens) ->
 	tokens = extractBrackets(tokens)
+	#console.log("mid", tokens)
 	tokens = handleFractions(tokens)
 	tokens
 			
@@ -150,6 +156,8 @@ window.parseToLatex = (str) ->
 	str = str.replace(/sin/g,"\\sin ");
 	str = str.replace(/sq/g,"\\sqrt ");
 	str = str.replace(/\\i/g,"\\int ");
+	str = str.replace(/ln/g,"\\ln ");
+	str = str.replace(/log/g,"\\log ");
 	
 	tokens = tokenize(str)
 	tokens = proccess (tokens)
