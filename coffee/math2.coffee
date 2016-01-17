@@ -22,10 +22,16 @@ class BinaryOperator extends Term
 	constructor: (@operator, @val1, @val2) ->
 	
 	toString: => 
-		val1Str = if typeof @val1 is 'Block' then @val1.toStringWithoutBrackets() else @val1.toString()
-		val2Str = if typeof @val2 is 'Block' then @val2.toStringWithoutBrackets() else @val2.toString()
+		val1Str = @val1.toString()
+		val2Str = @val2.toString()
 		
-		return "#{val1Str}#{@operator}{#{val2Str}}" if @operator in ['^', '_']
+		if @operator in ['^', '_']
+			#console.log("here", typeof @val2, @val2)
+			
+			if @val2 instanceof Block
+				val2Str = @val2.toStringWithoutBrackets() 			
+			return "#{val1Str}#{@operator}{#{val2Str}}" 
+			
 		return "#{val1Str}#{@operator}#{val2Str}" if @operator in ['+', '-', '*']
 		return "\\#{@operator.toString()}{#{val1Str}}{#{val2Str}}"
 

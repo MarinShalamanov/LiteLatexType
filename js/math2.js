@@ -64,9 +64,12 @@
 
     BinaryOperator.prototype.toString = function() {
       var ref, ref1, val1Str, val2Str;
-      val1Str = typeof this.val1 === 'Block' ? this.val1.toStringWithoutBrackets() : this.val1.toString();
-      val2Str = typeof this.val2 === 'Block' ? this.val2.toStringWithoutBrackets() : this.val2.toString();
+      val1Str = this.val1.toString();
+      val2Str = this.val2.toString();
       if ((ref = this.operator) === '^' || ref === '_') {
+        if (this.val2 instanceof Block) {
+          val2Str = this.val2.toStringWithoutBrackets();
+        }
         return "" + val1Str + this.operator + "{" + val2Str + "}";
       }
       if ((ref1 = this.operator) === '+' || ref1 === '-' || ref1 === '*') {
@@ -225,11 +228,9 @@
 
   proccess = function(tokens) {
     tokens = extractBrackets(tokens);
-    console.log(tokens);
     tokens = handleBinaryOperator(tokens, "^", "^");
-    console.log(tokens);
+    tokens = handleBinaryOperator(tokens, "_", "_");
     tokens = handleBinaryOperator(tokens, "/", "frac");
-    console.log(tokens);
     return tokens;
   };
 
