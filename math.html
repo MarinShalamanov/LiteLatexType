@@ -1,0 +1,48 @@
+<html>
+<head>
+<title>Math Typer </title>
+<script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+<script type="text/javascript" src="js/math.js"></script>
+<script type="text/javascript" src="js/math2.js"></script>
+</head>
+<body>
+
+<table width="100%">
+	<tr>
+		<td width="50%" valign="top">
+			<div id="latex-view"></div>
+		</td>
+		<td width="50%">
+			<textarea id="text" rows="40" cols="70"></textarea>
+		</td>
+	</tr>
+</table>
+
+
+<script>
+
+console.log(window.parseToLatex("(1+2)/2"))
+
+function update () {
+	var textView = document.getElementById("text");
+	
+	if (!!textView) {
+		var newContent = textView.value;
+
+		
+		newContent = window.parseToLatex(newContent);
+		
+		var inner = "<img src=\"http://latex.codecogs.com/gif.latex?" + newContent + "\" border=\"0\"/>";
+		
+		document.getElementById("latex-view").innerHTML = inner;
+	}
+	
+	setTimeout(update, 1000);
+}
+
+update();
+</script>
+
+</body>
+
+</html>
