@@ -22,8 +22,12 @@ class BinaryOperator extends Term
 	constructor: (@operator, @val1, @val2) ->
 	
 	toString: => 
-		return "#{@val1.toString()}#{@operator}#{@val2.toString()}" if @operator in ['^', '_', '+', '-', '*']
-		return "\\#{@operator.toString()}{#{@val1}}{#{@val2.toString()}}"
+		val1Str = if typeof @val1 is 'Block' then @val1.toStringWithoutBrackets() else @val1.toString()
+		val2Str = if typeof @val2 is 'Block' then @val2.toStringWithoutBrackets() else @val2.toString()
+		
+		return "#{val1Str}#{@operator}{#{val2Str}}" if @operator in ['^', '_']
+		return "#{val1Str}#{@operator}#{val2Str}" if @operator in ['+', '-', '*']
+		return "\\#{@operator.toString()}{#{val1Str}}{#{val2Str}}"
 
 class Block extends Term
 	constructor: (@values) ->
@@ -101,26 +105,19 @@ extractBrackets = (tokens) ->
 		tokens = newTokens
 		
 
-handleFractions = (tokens) ->
+handleBinaryOperator = (tokens, operator, operatorParsed) ->
 	while true 
 		foundFraction = false
-		
-		console.log(tokens)
-		
 		newTokens = []
 		
 		i = 0;
-		console.log(i for i in [1, tokens.length-2])
 		
 		for i in [1 .. tokens.length-2]  # excluded the corner cases
-			console.log("tokens[i] ==? ", tokens[i])
-			
-			if (/\//g).test(tokens[i])	
+			if tokens[i] == operator	
 				foundFraction = true
 				break;
 		
 		if !foundFraction 
-			console.log("no / found")
 			return tokens
 		
 		
@@ -130,7 +127,7 @@ handleFractions = (tokens) ->
 		nom = tokens[i-1]
 		denom = tokens[i+1] 
 		
-		frac = new BinaryOperator("frac", nom, denom);
+		frac = new BinaryOperator(operatorParsed, nom, denom);
 		
 		newTokens.push(frac)
 		
@@ -145,8 +142,12 @@ handleFractions = (tokens) ->
 		
 proccess = (tokens) ->
 	tokens = extractBrackets(tokens)
-	#console.log("mid", tokens)
-	tokens = handleFractions(tokens)
+	
+	tokens = handleBinaryOperator(tokens, "^", "^")
+	tokens = handleBinaryOperator(tokens, "_", "_")
+	tokens = handleBinaryOperator(tokens, "/", "frac")
+
+	
 	tokens
 			
 	
