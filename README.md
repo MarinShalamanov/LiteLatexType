@@ -1,4 +1,4 @@
-# LiteLatexType
+# LiteLatex
 
 The big pain of writing LaTeX is the speed. Usually writing LaTeX is much slower than writing down on paper. That's wrong. The purpose of this project is to fix this issue providing superlanguage of LaTeX that compiles down to LaTeX. 
 
